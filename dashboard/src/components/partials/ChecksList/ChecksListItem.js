@@ -12,6 +12,8 @@ import TableCell from "@material-ui/core/TableCell";
 
 import MenuController from "/components/controller/MenuController";
 
+import NamespaceLink from "/components/util/NamespaceLink";
+
 import ResourceDetails from "/components/partials/ResourceDetails";
 import TableOverflowCell from "/components/partials/TableOverflowCell";
 import TableSelectableRow from "/components/partials/TableSelectableRow";
@@ -32,9 +34,12 @@ class CheckListItem extends React.Component {
       fragment ChecksListItem_check on CheckConfig {
         name
         command
-        source
         subscriptions
         interval
+        namespace {
+          organization
+          environment
+        }
       }
     `,
   };
@@ -59,7 +64,14 @@ class CheckListItem extends React.Component {
         </TableCell>
         <TableOverflowCell>
           <ResourceDetails
-            title={<strong>{check.name}</strong>}
+            title={
+              <NamespaceLink
+                namespace={check.namespace}
+                to={`/checks/${check.name}`}
+              >
+                {check.name}
+              </NamespaceLink>
+            }
             details={
               <React.Fragment>
                 <Code>{check.command}</Code>
